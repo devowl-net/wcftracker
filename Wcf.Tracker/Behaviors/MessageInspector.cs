@@ -1,12 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
 
 using Wcf.Tracker.Log;
 
-namespace Wcf.Tracker.Sniffer
+namespace Wcf.Tracker.Behaviors
 {
     /// <summary>
     /// WCF message inspector.
@@ -62,7 +60,7 @@ namespace Wcf.Tracker.Sniffer
                 direction = MessageDirection.Incomming;
             }
 
-            _logTracker.ProcessMessage(direction, actionUrl, size, messageId);
+            _logTracker.ProcessMessage(direction, actionUrl, size, messageId, request.ToString());
         }
     }
 }

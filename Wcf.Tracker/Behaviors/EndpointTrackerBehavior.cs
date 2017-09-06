@@ -5,23 +5,13 @@ using System.ServiceModel.Dispatcher;
 
 using Wcf.Tracker.Log;
 
-namespace Wcf.Tracker.Sniffer
+namespace Wcf.Tracker.Behaviors
 {
     /// <summary>
     /// Endpoint tracker behavior.
     /// </summary>
-    internal class EndpointTrackerBehavior : IEndpointBehavior
+    public class EndpointTrackerBehavior : IEndpointBehavior
     {
-        private readonly LogTracker _logTracker;
-
-        /// <summary>
-        /// Constructor for <see cref="EndpointTrackerBehavior"/>.
-        /// </summary>
-        public EndpointTrackerBehavior(LogTracker logTracker)
-        {
-            _logTracker = logTracker;
-        }
-
         /// <inheritdoc/>
         public void Validate(ServiceEndpoint endpoint)
         {
@@ -42,7 +32,7 @@ namespace Wcf.Tracker.Sniffer
         {
             if (!clientRuntime.MessageInspectors.OfType<MessageInspector>().Any())
             {
-                clientRuntime.MessageInspectors.Add(new MessageInspector(_logTracker));
+                clientRuntime.MessageInspectors.Add(new MessageInspector(LogTracker.Instance));
             }
         }
     }

@@ -11,7 +11,15 @@ namespace Wcf.Tracker.Log
         /// <summary>
         /// Constructor for <see cref="TraceFrame"/>.
         /// </summary>
-        public TraceFrame(MessageDirection direction, string actionUrl, string size, UniqueId messageId, string callStack, string replyDuration, DateTime eventTime)
+        public TraceFrame(
+            MessageDirection direction,
+            string actionUrl,
+            string size,
+            UniqueId messageId,
+            string callStack,
+            string replyDuration,
+            DateTime eventTime,
+            string sourceText)
         {
             Direction = direction;
             ActionUrl = actionUrl;
@@ -20,6 +28,7 @@ namespace Wcf.Tracker.Log
             CallStack = callStack;
             ReplyDuration = replyDuration;
             EventTime = eventTime;
+            SourceText = sourceText;
         }
 
         /// <summary>
@@ -56,5 +65,10 @@ namespace Wcf.Tracker.Log
         /// Message event time.
         /// </summary>
         public DateTime EventTime { get; private set; }
+
+        /// <summary>
+        /// Source message text.
+        /// </summary>
+        public string SourceText { get; set; }
     }
 }

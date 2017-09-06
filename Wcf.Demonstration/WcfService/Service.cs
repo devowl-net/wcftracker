@@ -1,4 +1,6 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
+using System.Threading;
 
 namespace Wcf.Demonstration.WcfService
 {
@@ -8,6 +10,13 @@ namespace Wcf.Demonstration.WcfService
     {
         public int Sum(int value1, int value2)
         {
+            var r = new Random();
+            var random = r.Next(0, 10);
+            if (random < 3)
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(random));
+            }
+
             return value1 + value2;
         }
     }

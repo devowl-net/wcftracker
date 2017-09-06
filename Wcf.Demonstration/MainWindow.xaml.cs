@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -51,7 +52,7 @@ namespace Wcf.Demonstration
             {
                 return;
             }
-
+            
             var keyboard = args.KeyboardDevice;
             if ((keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt)) != ModifierKeys.None &&
                 keyboard.IsKeyDown(Key.L))

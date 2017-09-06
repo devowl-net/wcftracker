@@ -4,51 +4,50 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:log="clr-namespace:Wcf.Tracker.Log"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:Wcf.Tracker.Presentation.Behaviors"
+             xmlns:viewModels="clr-namespace:Wcf.Tracker.Presentation.ViewModels"
+             x:Name="Window" 
+             Title="Wcf Tracker"
+             d:DataContext="{x:Type viewModels:TraceWindowViewModel}"
              mc:Ignorable="d" WindowStartupLocation="CenterScreen" x:ClassModifier="internal">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Themes/Light/Metro.MSControls.Core.Implicit.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <Style TargetType="{x:Type TextBox}" x:Key="TextBoxStyle">
+            <DataTemplate x:Key="DirectionColumnTemplate">
+                <Image Width="20" Height="20" VerticalAlignment="Top">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="../Icons/arrow_gradient_blue_right.png" />
+                            <Setter Property="ToolTip" Value="Outgoing" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Direction}" Value="Incomming">
+                                    <Setter Property="Source" Value="../Icons/arrow_gradient_green_right.png" />
+                                    <Setter Property="ToolTip" Value="Incomming" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </DataTemplate>
+            <Style TargetType="{x:Type TextBox}" x:Key="TextBoxCellStyle">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="TextWrapping" Value="Wrap" />
                 <Setter Property="IsReadOnly" Value="True" />
             </Style>
-            <DataTemplate x:Key="RowTemplate">
-                <Grid d:DataContext="{d:DesignInstance log:TraceFrame}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25" />
-                        <ColumnDefinition Width="85" />
-                        <ColumnDefinition Width="405" />
-                        <ColumnDefinition Width="95" />
-                        <ColumnDefinition Width="65" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Image Width="20" Height="20" VerticalAlignment="Top">
-                        <Image.Style>
-                            <Style TargetType="{x:Type Image}">
-                                <Setter Property="Source" Value="../Icons/arrow_gradient_blue_right.png" />
-                                <Setter Property="ToolTip" Value="Outgoing" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Direction}" Value="Incomming">
-                                        <Setter Property="Source" Value="../Icons/arrow_gradient_green_right.png" />
-                                        <Setter Property="ToolTip" Value="Incomming" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
-                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding EventTime, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" Grid.Column="1" ToolTip="{Binding EventTime}" />
-                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding ActionUrl, Mode=OneWay}" Grid.Column="2" ToolTip="{Binding ActionUrl}" />
-                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding ReplyDuration, Mode=OneWay}" Grid.Column="3" ToolTip="{Binding ReplyDuration}" Foreground="DarkRed"/>
-                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding Size, Mode=OneWay}" Grid.Column="4" ToolTip="{Binding Size}" />
-                    <Expander Grid.Column="5" Header="Open" IsExpanded="False" Style="{Binding}">
-                        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding CallStack, Mode=OneWay}"  />
-                    </Expander>
-                </Grid>
+            <DataTemplate x:Key="StackColumnTemplate">
+                <Expander Header="Open" IsExpanded="False" Style="{Binding}">
+                    <TextBox Style="{StaticResource TextBoxCellStyle}" Text="{Binding CallStack, Mode=OneWay}"  />
+                </Expander>
+            </DataTemplate>
+            <DataTemplate x:Key="MessageTextTemplate">
+                <Button Content="+" Command="{Binding ElementName=Window, Path=DataContext.ShowMessageCommand}" CommandParameter="{Binding}" />
+            </DataTemplate>
+            <DataTemplate x:Key="CommonColumnTemplate">
+                <TextBox Style="{StaticResource TextBoxCellStyle}" />
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
@@ -57,28 +56,22 @@
             <Button Content="Export" HorizontalAlignment="Left" Command="{Binding ExportCommand}" Margin="10" />
             <Button Content="Clear" HorizontalAlignment="Left" Command="{Binding ClearCommand}" Margin="10" />
         </StackPanel>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25" />
-                    <ColumnDefinition Width="85" />
-                    <ColumnDefinition Width="405" />
-                    <ColumnDefinition Width="95" />
-                    <ColumnDefinition Width="65" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="1" Text="Time"/>
-                <TextBlock Grid.Column="2" Text="Action URL"/>
-                <TextBlock Grid.Column="3" Text="Duration"/>
-                <TextBlock Grid.Column="4" Text="Size"/>
-                <TextBlock Grid.Column="5" Text="CallStack"/>
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Source={x:Static log:LogTracker.Instance}, Path=TraceFrames}" ItemTemplate="{StaticResource RowTemplate}" Grid.ColumnSpan="15"/>
-            </Grid>
-        </ScrollViewer>
+        <ListView Margin="5,0" ItemsSource="{Binding Source={x:Static log:LogTracker.Instance}, Path=TraceFrames}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="35" CellTemplate="{StaticResource DirectionColumnTemplate}"/>
+                    <GridViewColumn Header="Time" Width="85" DisplayMemberBinding="{Binding EventTime, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" CellTemplate="{StaticResource CommonColumnTemplate}" />
+                    <GridViewColumn Header="Action URL" Width="405" DisplayMemberBinding="{Binding ActionUrl, Mode=OneWay}" />
+                    <GridViewColumn Header="Duration" Width="95" DisplayMemberBinding="{Binding ReplyDuration, Mode=OneWay}" />
+                    <GridViewColumn Header="Size" Width="65" DisplayMemberBinding="{Binding Size, Mode=OneWay}" />
+                    <GridViewColumn Header="Text" Width="65" CellTemplate="{StaticResource MessageTextTemplate}" />
+                    <GridViewColumn Header="CallStack" CellTemplate="{StaticResource StackColumnTemplate}" />
+                </GridView>
+            </ListView.View>
+            <i:Interaction.Behaviors>
+                <behaviors:ListViewLastColumnFillBehavior />
+            </i:Interaction.Behaviors>
+        </ListView>
     </DockPanel>
 </Window>
     

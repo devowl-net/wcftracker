@@ -3,8 +3,8 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 
+using Wcf.Tracker.Behaviors;
 using Wcf.Tracker.Log;
-using Wcf.Tracker.Sniffer;
 
 namespace Wcf.Tracker
 {
@@ -26,7 +26,7 @@ namespace Wcf.Tracker
 
             if (!serviceEndpoint.Behaviors.OfType<EndpointTrackerBehavior>().Any())
             {
-                serviceEndpoint.Behaviors.Add(new EndpointTrackerBehavior(LogTracker.Instance));
+                serviceEndpoint.Behaviors.Add(new EndpointTrackerBehavior());
             }
 
             return serviceEndpoint;

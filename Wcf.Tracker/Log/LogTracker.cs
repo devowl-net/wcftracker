@@ -67,7 +67,7 @@ namespace Wcf.Tracker.Log
         /// <param name="actionUrl">Service action URL.</param>
         /// <param name="size">Message size.</param>
         /// <param name="messageId">Message identity.</param>
-        internal void ProcessMessage(MessageDirection direction, string actionUrl, string size, UniqueId messageId)
+        internal void ProcessMessage(MessageDirection direction, string actionUrl, string size, UniqueId messageId, string sourceText)
         {
             var stackTrace = TrackerUtils.GetStackTrace(3);
 
@@ -89,7 +89,8 @@ namespace Wcf.Tracker.Log
                 messageId,
                 stackTrace,
                 replyDuration,
-                DateTime.Now);
+                DateTime.Now,
+                sourceText);
 
             TraceFrames.Add(traceFrame);
         }

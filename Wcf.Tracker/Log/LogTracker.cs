@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 
-using Wcf.Tracker.Sniffer;
-
 namespace Wcf.Tracker.Log
 {
     /// <summary>
@@ -12,6 +10,8 @@ namespace Wcf.Tracker.Log
     /// </summary>
     internal class LogTracker
     {
+        private static LogTracker _instance;
+
         private readonly Dictionary<UniqueId, DateTime> _messageTimestamps;
 
         private bool _isLogging;
@@ -19,9 +19,20 @@ namespace Wcf.Tracker.Log
         /// <summary>
         /// Constructor for <see cref="LogTracker"/>.
         /// </summary>
-        public LogTracker()
+        private LogTracker()
         {
             _messageTimestamps = new Dictionary<UniqueId, DateTime>();
+        }
+
+        /// <summary>
+        /// Singleton instance reference.
+        /// </summary>
+        public static LogTracker Instance
+        {
+            get
+            {
+                return _instance ?? (_instance = new LogTracker());
+            }
         }
 
         /// <summary>
@@ -48,7 +59,7 @@ namespace Wcf.Tracker.Log
         /// Trace frames roster.
         /// </summary>
         public ObservableCollection<TraceFrame> TraceFrames { get; } = new ObservableCollection<TraceFrame>();
-        
+
         /// <summary>
         /// Process new message.
         /// </summary>
@@ -58,13 +69,27 @@ namespace Wcf.Tracker.Log
         /// <param name="messageId">Message identity.</param>
         internal void ProcessMessage(MessageDirection direction, string actionUrl, string size, UniqueId messageId)
         {
-            var stackTrace = TrackerUtils.GetStackTrace(2);
+            var stackTrace = TrackerUtils.GetStackTrace(3);
+
+            DateTime lastMessageTime;
+            string replyDuration = string.Empty;
+            if (messageId != null && _messageTimestamps.TryGetValue(messageId, out lastMessageTime))
+            {
+                var timeDiff = DateTime.Now - lastMessageTime;
+                if ((int)timeDiff.TotalSeconds > 0)
+                {
+                    replyDuration = timeDiff.ToString("hh':'mm':'ss'.'fff");
+                }
+            }
+
             var traceFrame = new TraceFrame(
                 direction,
                 actionUrl,
                 size,
                 messageId,
-                stackTrace);
+                stackTrace,
+                replyDuration,
+                DateTime.Now);
 
             TraceFrames.Add(traceFrame);
         }

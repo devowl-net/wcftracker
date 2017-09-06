@@ -1,0 +1,84 @@
+﻿<Window x:Class="Wcf.Tracker.Presentation.Views.TraceWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:log="clr-namespace:Wcf.Tracker.Log"
+             mc:Ignorable="d" WindowStartupLocation="CenterScreen" x:ClassModifier="internal">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Light/Metro.MSControls.Core.Implicit.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type TextBox}" x:Key="TextBoxStyle">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="IsReadOnly" Value="True" />
+            </Style>
+            <DataTemplate x:Key="RowTemplate">
+                <Grid d:DataContext="{d:DesignInstance log:TraceFrame}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="85" />
+                        <ColumnDefinition Width="405" />
+                        <ColumnDefinition Width="95" />
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Width="20" Height="20" VerticalAlignment="Top">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Setter Property="Source" Value="../Icons/arrow_gradient_blue_right.png" />
+                                <Setter Property="ToolTip" Value="Outgoing" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Direction}" Value="Incomming">
+                                        <Setter Property="Source" Value="../Icons/arrow_gradient_green_right.png" />
+                                        <Setter Property="ToolTip" Value="Incomming" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding EventTime, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" Grid.Column="1" ToolTip="{Binding EventTime}" />
+                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding ActionUrl, Mode=OneWay}" Grid.Column="2" ToolTip="{Binding ActionUrl}" />
+                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding ReplyDuration, Mode=OneWay}" Grid.Column="3" ToolTip="{Binding ReplyDuration}" Foreground="DarkRed"/>
+                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding Size, Mode=OneWay}" Grid.Column="4" ToolTip="{Binding Size}" />
+                    <Expander Grid.Column="5" Header="Open" IsExpanded="False" Style="{Binding}">
+                        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding CallStack, Mode=OneWay}"  />
+                    </Expander>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel Margin="10">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+            <Button Content="Export" HorizontalAlignment="Left" Command="{Binding ExportCommand}" Margin="10" />
+            <Button Content="Clear" HorizontalAlignment="Left" Command="{Binding ClearCommand}" Margin="10" />
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="85" />
+                    <ColumnDefinition Width="405" />
+                    <ColumnDefinition Width="95" />
+                    <ColumnDefinition Width="65" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="1" Text="Time"/>
+                <TextBlock Grid.Column="2" Text="Action URL"/>
+                <TextBlock Grid.Column="3" Text="Duration"/>
+                <TextBlock Grid.Column="4" Text="Size"/>
+                <TextBlock Grid.Column="5" Text="CallStack"/>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Source={x:Static log:LogTracker.Instance}, Path=TraceFrames}" ItemTemplate="{StaticResource RowTemplate}" Grid.ColumnSpan="15"/>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
+    

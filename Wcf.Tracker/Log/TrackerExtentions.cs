@@ -16,8 +16,7 @@ namespace Wcf.Tracker.Log
         /// <returns></returns>
         public static string GetHumanSize(this Message message)
         {
-            var bufferedCopy = message.CreateBufferedCopy(int.MaxValue);
-            var messageBytesSize = CalculateSize(bufferedCopy.CreateMessage());
+            var messageBytesSize = CalculateSize(message);
 
             if (messageBytesSize == 0)
             {

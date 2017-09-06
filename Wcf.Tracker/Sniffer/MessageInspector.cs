@@ -29,7 +29,7 @@ namespace Wcf.Tracker.Sniffer
         {
             if (request != null && _logTracker.IsLogging)
             {
-                LogMessage(request);
+                LogMessage(ref request);
                 _logTracker.SaveMessageId(request.Headers.MessageId);
             }
 
@@ -41,20 +41,24 @@ namespace Wcf.Tracker.Sniffer
         {
             if (reply != null && _logTracker.IsLogging)
             {
-                LogMessage(reply);
+                LogMessage(ref reply);
             }
         }
 
-        private void LogMessage(Message request)
+        private void LogMessage(ref Message request)
         {
-            var actionUrl = request.Headers.Action;
-            var size = request.GetHumanSize();
-            var messageId = request.Headers.MessageId;
+            var bufferedCopy = request.CreateBufferedCopy(int.MaxValue);
+            request = bufferedCopy.CreateMessage();
+            var requestCopy = bufferedCopy.CreateMessage();
+
+            var actionUrl = requestCopy.Headers.Action;
+            var size = requestCopy.GetHumanSize();
+            var messageId = requestCopy.Headers.MessageId;
             var direction = MessageDirection.Outgoing;
 
             if (messageId == null)
             {
-                messageId = request.Headers.RelatesTo;
+                messageId = requestCopy.Headers.RelatesTo;
                 direction = MessageDirection.Incomming;
             }
 

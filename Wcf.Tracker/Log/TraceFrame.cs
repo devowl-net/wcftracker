@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 
 namespace Wcf.Tracker.Log
 {
@@ -10,13 +11,15 @@ namespace Wcf.Tracker.Log
         /// <summary>
         /// Constructor for <see cref="TraceFrame"/>.
         /// </summary>
-        public TraceFrame(MessageDirection direction, string actionUrl, string size, UniqueId messageId, string callStack)
+        public TraceFrame(MessageDirection direction, string actionUrl, string size, UniqueId messageId, string callStack, string replyDuration, DateTime eventTime)
         {
             Direction = direction;
             ActionUrl = actionUrl;
             Size = size;
             MessageId = messageId;
             CallStack = callStack;
+            ReplyDuration = replyDuration;
+            EventTime = eventTime;
         }
 
         /// <summary>
@@ -43,5 +46,15 @@ namespace Wcf.Tracker.Log
         /// Calling stack.
         /// </summary>
         public string CallStack { get; private set; }
+
+        /// <summary>
+        /// Reply time for response messages.
+        /// </summary>
+        public string ReplyDuration { get; private set; }
+
+        /// <summary>
+        /// Message event time.
+        /// </summary>
+        public DateTime EventTime { get; private set; }
     }
 }

@@ -19,5 +19,10 @@ namespace Wcf.Demonstration.WcfService
 
             return value1 + value2;
         }
+
+        public int SendBytes(byte[] arrray)
+        {
+            return arrray.Length;
+        }
     }
 }

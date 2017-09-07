@@ -11,7 +11,7 @@ namespace Wcf.Tracker.Presentation.Behaviors
     /// <summary>
     /// Behavior fill ListView last column width if it have available space.
     /// </summary>
-    public class ListViewLastColumnFillBehavior : Behavior<ListView>
+    internal class ListViewLastColumnFillBehavior : Behavior<ListView>
     {
         /// <inheritdoc/>
         protected override void OnAttached()

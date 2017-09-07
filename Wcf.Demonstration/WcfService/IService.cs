@@ -7,5 +7,8 @@ namespace Wcf.Demonstration.WcfService
     {
         [OperationContract]
         int Sum(int value1, int value2);
+
+        [OperationContract]
+        int SendBytes(byte[] arrray);
     }
 }

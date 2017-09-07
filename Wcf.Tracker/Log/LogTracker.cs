@@ -67,10 +67,10 @@ namespace Wcf.Tracker.Log
         /// <param name="actionUrl">Service action URL.</param>
         /// <param name="size">Message size.</param>
         /// <param name="messageId">Message identity.</param>
-        internal void ProcessMessage(MessageDirection direction, string actionUrl, string size, UniqueId messageId, string sourceText)
+        /// <param name="sourceText">Source message text.</param>
+        /// <param name="stackTrace">Stack trace.</param>
+        internal void ProcessMessage(MessageDirection direction, string actionUrl, string size, UniqueId messageId, string sourceText, string stackTrace)
         {
-            var stackTrace = TrackerUtils.GetStackTrace(3);
-
             DateTime lastMessageTime;
             string replyDuration = string.Empty;
             if (messageId != null && _messageTimestamps.TryGetValue(messageId, out lastMessageTime))

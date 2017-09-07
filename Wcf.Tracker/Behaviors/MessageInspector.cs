@@ -1,4 +1,6 @@
-﻿using System.ServiceModel;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
 
@@ -45,6 +47,9 @@ namespace Wcf.Tracker.Behaviors
 
         private void LogMessage(ref Message request)
         {
+            var stackTrace = TrackerUtils.GetStackTrace(3);
+            DebuggerBreakCheck(stackTrace, request.Headers.Action);
+
             var bufferedCopy = request.CreateBufferedCopy(int.MaxValue);
             request = bufferedCopy.CreateMessage();
             var requestCopy = bufferedCopy.CreateMessage();
@@ -60,7 +65,16 @@ namespace Wcf.Tracker.Behaviors
                 direction = MessageDirection.Incomming;
             }
 
-            _logTracker.ProcessMessage(direction, actionUrl, size, messageId, request.ToString());
+            _logTracker.ProcessMessage(direction, actionUrl, size, messageId, request.ToString(), stackTrace);
+        }
+
+        private void DebuggerBreakCheck(string stackTrace, string action)
+        {
+            var collection = LogTracker.Instance.TraceFrames.ToArray();
+            if (collection.Any(frame => frame.IsBreakpoint && frame.CallStack == stackTrace && frame.ActionUrl == action))
+            {
+                Debugger.Break();
+            }
         }
     }
 }

@@ -8,7 +8,9 @@
              xmlns:behaviors="clr-namespace:Wcf.Tracker.Presentation.Behaviors"
              xmlns:viewModels="clr-namespace:Wcf.Tracker.Presentation.ViewModels"
              x:Name="Window" 
-             Title="Wcf Tracker"
+             Title="WCF Tracker"
+             Width="1200"
+             Height="700"
              d:DataContext="{x:Type viewModels:TraceWindowViewModel}"
              mc:Ignorable="d" WindowStartupLocation="CenterScreen" x:ClassModifier="internal">
     <Window.Resources>
@@ -49,6 +51,35 @@
             <DataTemplate x:Key="CommonColumnTemplate">
                 <TextBox Style="{StaticResource TextBoxCellStyle}" />
             </DataTemplate>
+            <DataTemplate x:Key="BreakpointColumnTemplate">
+                <ToggleButton IsChecked="{Binding IsBreakpoint}">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Image Source="../Icons/gray_breakpoint.png" ToolTip="Insert breakpoint" />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Image Source="../Icons/red_breakpoint.png" ToolTip="Remove breakpoint" />    
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+            </DataTemplate>
+            <DataTemplate x:Key="DurationCellTemplate">
+                <TextBlock Text="{Binding ReplyDuration, Mode=OneWay}" Foreground="Red" />
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel Margin="10">
@@ -59,19 +90,20 @@
         <ListView Margin="5,0" ItemsSource="{Binding Source={x:Static log:LogTracker.Instance}, Path=TraceFrames}">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Width="25" CellTemplate="{StaticResource BreakpointColumnTemplate}" />
                     <GridViewColumn Width="35" CellTemplate="{StaticResource DirectionColumnTemplate}"/>
                     <GridViewColumn Header="Time" Width="85" DisplayMemberBinding="{Binding EventTime, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" CellTemplate="{StaticResource CommonColumnTemplate}" />
                     <GridViewColumn Header="Action URL" Width="405" DisplayMemberBinding="{Binding ActionUrl, Mode=OneWay}" />
-                    <GridViewColumn Header="Duration" Width="95" DisplayMemberBinding="{Binding ReplyDuration, Mode=OneWay}" />
+                    <GridViewColumn Header="Duration" Width="95" CellTemplate="{StaticResource DurationCellTemplate}" />
                     <GridViewColumn Header="Size" Width="65" DisplayMemberBinding="{Binding Size, Mode=OneWay}" />
-                    <GridViewColumn Header="Text" Width="65" CellTemplate="{StaticResource MessageTextTemplate}" />
+                    <GridViewColumn Header="Text" Width="55" CellTemplate="{StaticResource MessageTextTemplate}" />
                     <GridViewColumn Header="CallStack" CellTemplate="{StaticResource StackColumnTemplate}" />
                 </GridView>
             </ListView.View>
             <i:Interaction.Behaviors>
                 <behaviors:ListViewLastColumnFillBehavior />
+                <behaviors:ListViewHideDebugColumnBehavior />
             </i:Interaction.Behaviors>
         </ListView>
     </DockPanel>
 </Window>
-    

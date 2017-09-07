@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="227" Width="339" KeyDown="MainWindow_OnKeyDown">
+        Title=">>> Demonstration" Height="247" Width="339" KeyDown="MainWindow_OnKeyDown">
     <Grid>
         <Button Content="Sum" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
         <Label x:Name="SummResult" Content="" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="35"/>
@@ -13,6 +13,11 @@
         <TextBlock x:Name="textBlock" Background="Orange" TextWrapping="Wrap" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Height="35">
             <Run Text="Hotkeys: CTRL+ALT+L" />
         </TextBlock>
-        <Button x:Name="button" Content="Open Trace" Height="20" Margin="160,0,71,10" VerticalAlignment="Bottom" d:LayoutOverrides="Height" Click="button_Click_1"/>
+        <Button x:Name="button" Content="Trace Window" Height="20" Margin="160,0,71,10" VerticalAlignment="Bottom" d:LayoutOverrides="Height" Click="button_Click_1"/>
+        <Button x:Name="button1" Content="Random byte array" Margin="125,41,91,0" VerticalAlignment="Top" RenderTransformOrigin="-0.133,0.45" Click="button1_Click"/>
+        <Label x:Name="RandomByteSize" Content="" Margin="125,10,131,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.192"/>
+        <Label x:Name="label" Content="How to use:" HorizontalAlignment="Left" Margin="20,75,0,96" Width="85"/>
+        <Label x:Name="label1" Content="1. Open 'Trace Window'" HorizontalAlignment="Left" Margin="20,0,0,70" VerticalAlignment="Bottom"/>
+        <Label x:Name="label2" Content="2. Click on 'Sum' and 'Random array' buttons" Margin="25,0,26,44" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

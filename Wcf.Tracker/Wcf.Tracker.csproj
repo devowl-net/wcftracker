@@ -49,6 +49,7 @@
     <Compile Include="LogExtentions.cs" />
     <Compile Include="LogService.cs" />
     <Compile Include="Presentation\Behaviors\DelegateCommand.cs" />
+    <Compile Include="Presentation\Behaviors\ListViewHideDebugColumnBehavior.cs" />
     <Compile Include="Presentation\Behaviors\ListViewLastColumnFillBehavior.cs" />
     <Compile Include="Presentation\ViewModels\TraceWindowViewModel.cs" />
     <Compile Include="Presentation\Views\MessageSourceWindow.xaml.cs">
@@ -66,7 +67,9 @@
     <Compile Include="Log\TrackerExtentions.cs" />
     <Compile Include="Log\TrackerUtils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Presentation\Icons\gray_breakpoint.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Presentation\Themes\Light\Metro.MSControls.Core.Implicit.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -96,6 +99,9 @@
   <ItemGroup>
     <Resource Include="Presentation\Icons\arrow_gradient_blue_right.png" />
     <Resource Include="Presentation\Icons\arrow_gradient_green_right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Presentation\Icons\red_breakpoint.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

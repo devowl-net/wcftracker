@@ -75,13 +75,16 @@
                 </DataTrigger>
             </HierarchicalDataTemplate.Triggers>
         </HierarchicalDataTemplate>
+        <ContextMenu x:Key="CopyMenu">
+            <MenuItem Header="Copy" Click="OnCopyNodePress" />
+        </ContextMenu>
     </Window.Resources>
 
     <Grid>
         <TabControl>
             <TabControl.Items>
                 <TabItem Header="Tree">
-                    <TreeView x:Name="TreeViewControl" ItemTemplate="{StaticResource treeViewTemplate}" />
+                    <TreeView x:Name="TreeViewControl" ItemTemplate="{StaticResource treeViewTemplate}" ContextMenu="{StaticResource CopyMenu}" />
                 </TabItem>
                 <TabItem Header="Flat">
                     <TextBox x:Name="TextControl" Text="{Binding XmlText, Mode=OneTime}" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" />

@@ -20,7 +20,7 @@ namespace Wcf.Demonstration
 
         private readonly Uri _hostUri = new Uri("net.tcp://127.0.0.1:60000");
 
-        private int _sumValue = 0;
+        private int _sumValue;
         
         public MainWindow()
         {
@@ -32,10 +32,12 @@ namespace Wcf.Demonstration
         {
             ValueBefore.Content = _sumValue;
             
+            // Simple Server
             var serviceHost = new ServiceHost(typeof(Service));
             serviceHost.AddServiceEndpoint(typeof(IService), new NetTcpBinding(), _hostUri);
             serviceHost.Open();
 
+            // Simple client
             var factory = new ChannelFactory<IService>(new NetTcpBinding()).AttachTracker();
             _service = factory.CreateChannel(new EndpointAddress(_hostUri));
         }
@@ -64,6 +66,19 @@ namespace Wcf.Demonstration
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
             LogService.ShowWindow();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            var r = new Random();
+            var size = r.Next(64, 1024);
+            var preparedArray = new byte[size];
+            for (int i = 0; i < preparedArray.Length; i++)
+            {
+                preparedArray[i] = (byte)r.Next(0, 128);
+            }
+
+            RandomByteSize.Content = $"Sent {_service.SendBytes(preparedArray)} bytes";
         }
     }
 }

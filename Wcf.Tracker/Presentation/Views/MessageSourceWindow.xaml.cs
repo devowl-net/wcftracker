@@ -54,5 +54,14 @@ namespace Wcf.Tracker.Presentation.Views
                 // TODO show error
             }
         }
+
+        private void OnCopyNodePress(object sender, RoutedEventArgs args)
+        {
+            var xmlText = TreeViewControl.SelectedItem as XmlText;
+            if (xmlText != null)
+            {
+                Clipboard.SetText(xmlText.Value);
+            }
+        }
     }
 }

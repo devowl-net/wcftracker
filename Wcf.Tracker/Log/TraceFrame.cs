@@ -69,6 +69,11 @@ namespace Wcf.Tracker.Log
         /// <summary>
         /// Source message text.
         /// </summary>
-        public string SourceText { get; set; }
+        public string SourceText { get; private set; }
+
+        /// <summary>
+        /// Is trace frame is breakpoint.
+        /// </summary>
+        public bool IsBreakpoint { get; set; }
     }
 }
